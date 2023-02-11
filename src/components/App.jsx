@@ -1,29 +1,18 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 
 export class App extends Component {
-  static defaultProps = {
-    initialContacts: [
+  state = {
+    contacts: [
       { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
       { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    initialFilter: '',
-  };
-
-  static defaultPropTypes = {
-    initialContacts: PropTypes.array.isRequired,
-    initialFilter: PropTypes.string.isRequired,
-  };
-
-  state = {
-    contacts: this.props.initialContacts,
-    filter: this.props.initialFilter,
+    filter: '',
   };
 
   formSubmitHandler = ({ name, number }) => {
@@ -52,6 +41,17 @@ export class App extends Component {
       };
     });
   };
+
+  componentDidMount() {
+    const contactsLocalStorage = JSON.parse(localStorage.getItem('contacts'));
+    this.setState({ contacts: contactsLocalStorage });
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const normalizedFilter = this.state.filter.toLowerCase();
