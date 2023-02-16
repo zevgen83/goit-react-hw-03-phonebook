@@ -15,6 +15,21 @@ export class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    const currentContacts = this.state.contacts;
+    if (currentContacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(currentContacts));
+    }
+  }
+
   formSubmitHandler = ({ name, number }) => {
     const isFindName = this.state.contacts.find(
       contact => contact.name === name
