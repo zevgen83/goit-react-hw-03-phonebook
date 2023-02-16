@@ -15,6 +15,17 @@ export class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contactsLocalStorage = JSON.parse(localStorage.getItem('contacts'));
+    this.setState({ contacts: contactsLocalStorage });
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   formSubmitHandler = ({ name, number }) => {
     const isFindName = this.state.contacts.find(
       contact => contact.name === name
@@ -41,17 +52,6 @@ export class App extends Component {
       };
     });
   };
-
-  componentDidMount() {
-    const contactsLocalStorage = JSON.parse(localStorage.getItem('contacts'));
-    this.setState({ contacts: contactsLocalStorage });
-  }
-
-  componentDidUpdate(prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
 
   render() {
     const normalizedFilter = this.state.filter.toLowerCase();
